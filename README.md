@@ -3,6 +3,22 @@ title: Building GitHub Agentic Workflows
 description: Three progressive hands-on labs for a 90-minute workshop.
 ---
 
+## Workshop Checklist
+
+Follow this page for commands and workflow content. Use the
+[lab runsheet](docs/lab-runsheet.md) for timings, facilitator prompts, and checkpoints.
+Times are measured from the start of the 90-minute workshop.
+
+* [ ] Before Lab 1: complete [repository creation](#your-repository) and [setup](#setup) in your own copy
+* [ ] 0:20-0:35: complete [Lab 1](#lab-1-your-first-workflow) and find your summary issue
+* [ ] 0:35-0:55: complete [Lab 2](#lab-2-safe-outputs-and-command-triggers) and find the comment and follow-up issue
+* [ ] 0:55-1:10: complete [Lab 3](#lab-3-install-repo-assist) and inspect the issue labels
+* [ ] 1:10-1:20: [design your own agent](#design-your-own-agent)
+* [ ] 1:20-1:30: share one result, ask questions, and [clean up](#finish)
+
+If blocked, note your workflow name, run URL, and failing job, then ask the
+facilitator. Never share a token or an unredacted credential error.
+
 ## Your Repository
 
 Use this template to create your own repository, then clone your copy.
