@@ -14,7 +14,6 @@ description: |
   Always polite, constructive, and mindful of the project's goals.
 
 on:
-  schedule: every 12h
   workflow_dispatch:
     inputs:
       command:
@@ -43,7 +42,7 @@ concurrency:
 
 if: needs.pre_activation.outputs.check_result == 'success'
 
-timeout-minutes: 60
+timeout-minutes: 15
 
 permissions:
   actions: read
@@ -77,7 +76,6 @@ checkout:
   fetch-depth: 0   # fetch full history
 
 tools:
-  web-fetch:
   github:
     toolsets: [all]
     min-integrity: none # This workflow is allowed to examine and comment on any issues or PRs
@@ -180,7 +178,7 @@ safe-outputs:
     run-success: "✓ {workflow_name} completed successfully, see [workflow run]({run_url})."
     run-failure: "✗ {workflow_name} encountered {status}, see [workflow run]({run_url})."
   add-comment:
-    max: 10
+    max: 3
     target: "*"
     hide-older-comments: true
   create-pull-request:
@@ -192,11 +190,11 @@ safe-outputs:
       exclude:
         - CHANGELOG.md
         - README.md
-    max: 4
+    max: 1
   push-to-pull-request-branch:
     target: "*"
     required-title-prefix: "[repo-assist] "
-    max: 4
+    max: 1
     protected-files:
       policy: allowed
       exclude:
@@ -205,18 +203,18 @@ safe-outputs:
   create-issue:
     title-prefix: "[repo-assist] "
     labels: [automation, repo-assist]
-    max: 4
+    max: 1
   update-issue:
     target: "*"
     required-title-prefix: "[repo-assist] "
     max: 1
   add-labels:
     allowed: [bug, enhancement, "help wanted", "good first issue", "spam", "off topic", documentation, question, duplicate, wontfix, "needs triage", "needs investigation", "breaking change", performance, security, refactor]
-    max: 30
+    max: 5
     target: "*" 
   remove-labels:
     allowed: [bug, enhancement, "help wanted", "good first issue", "spam", "off topic", documentation, question, duplicate, wontfix, "needs triage", "needs investigation", "breaking change", performance, security, refactor]
-    max: 5
+    max: 1
     target: "*" 
 
 steps:
@@ -225,21 +223,9 @@ steps:
       MEMORY_DIR: /tmp/gh-aw/repo-memory/default
     run: |
       if [[ ! -f "$MEMORY_DIR/notes.json" ]]; then
-        cat > "$MEMORY_DIR/notes.json" <<'EOF'
-      {
-        "version": 1,
-        "cursors": {
-          "labelling_after": null,
-          "investigation_after": null
-        },
-        "issues": [],
-        "fixes": [],
-        "checks": [],
-        "completed_actions": [],
-        "priorities": []
-      }
-      EOF
+        jq -n '{version: 1, cursors: {labelling_after: null, investigation_after: null}, issues: [], fixes: [], checks: [], completed_actions: [], priorities: []}' > "$MEMORY_DIR/notes.json"
       fi
+      jq empty "$MEMORY_DIR/notes.json"
 
   - name: Fetch repo data for task weighting
     env:
