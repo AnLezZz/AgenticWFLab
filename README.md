@@ -171,6 +171,8 @@ Recompile and push after changing frontmatter.
 Allow 15 minutes. Install the pinned gallery workflow:
 
 ```bash
+gh label create automation --color 0969DA --force
+gh label create repo-assist --color 1A7F37 --force
 gh aw add githubnext/agentics/repo-assist@b4e175bab6674279e0fe158f7dc877b77bc9d92f --engine copilot
 ```
 
