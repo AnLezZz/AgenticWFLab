@@ -35,11 +35,13 @@ wait for a new agent run and CI run to finish within the ten-minute introduction
 
 ## Readiness Gate
 
-Complete the guide's [repository](../README.md#your-repository) and
+Complete the guide's [preflight](../README.md#preflight),
+[repository](../README.md#your-repository), and
 [setup](../README.md#setup) sections before Lab 1. Prefer completing setup before
 the session; use 0:10-0:20 to resolve remaining blockers.
 
 * [ ] Working in your own template copy, not the shared template
+* [ ] Git and GitHub CLI work in the chosen Bash environment; Git commit name and email are configured
 * [ ] `gh auth status` succeeds and `gh aw version` shows v0.92.0
 * [ ] GitHub Actions and Issues enabled; Actions PR creation permitted
 * [ ] Workflow authentication configured in this repository
@@ -51,6 +53,11 @@ the session; use 0:10-0:20 to resolve remaining blockers.
 
 If setup cannot be resolved quickly, pair with someone whose repository is ready.
 Do not share credentials. Template copies do not inherit secrets, issues, or settings.
+
+Warn participants that **Support hours tests** can be red by design: the starter
+has 11 passing tests and one opening-time failure. Check the workflow name before
+debugging. This is separate from the three agentic workflows and does not block
+the required labs; preserve it for the optional code-fix exercise.
 
 ## Lab 1: Your First Workflow
 

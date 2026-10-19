@@ -9,7 +9,7 @@ Follow this page for commands and workflow content. Use the
 [lab runsheet](docs/lab-runsheet.md) for timings, facilitator prompts, and checkpoints.
 Times are measured from the start of the 90-minute workshop.
 
-* [ ] Before Lab 1: complete [repository creation](#your-repository) and [setup](#setup) in your own copy
+* [ ] Before Lab 1: complete [preflight](#preflight), [repository creation](#your-repository), and [setup](#setup) in your own copy
 * [ ] 0:20-0:35: complete [Lab 1](#lab-1-your-first-workflow) and find your summary issue
 * [ ] 0:35-0:55: complete [Lab 2](#lab-2-safe-outputs-and-command-triggers) and find the comment and follow-up issue
 * [ ] 0:55-1:10: complete [Lab 3](#lab-3-install-repo-assist) and inspect the issue labels
@@ -19,6 +19,40 @@ Times are measured from the start of the 90-minute workshop.
 If blocked, note your workflow name, run URL, and failing job, then ask the
 facilitator. Never share a token or an unredacted credential error.
 
+## Preflight
+
+Complete this before the workshop. You need a GitHub account with Copilot access,
+[Git](https://git-scm.com/downloads), and the [GitHub CLI](https://cli.github.com/).
+For Windows, follow Microsoft's [WSL installation guide](https://learn.microsoft.com/windows/wsl/install),
+then install Git and the GitHub CLI inside WSL. Run all participant commands in
+the same Bash environment: Linux, macOS, or WSL, not PowerShell.
+
+Check the tools and authenticate before creating a repository:
+
+```bash
+git --version
+gh --version
+gh auth status
+```
+
+If not authenticated, run the following and complete the browser login. Choose
+GitHub.com and HTTPS. Never paste a credential into workshop chat.
+
+```bash
+gh auth login --hostname github.com --git-protocol https --web --scopes repo,workflow
+```
+
+For an existing login, verify the `repo` and `workflow` scopes; if missing, use
+`gh auth refresh --hostname github.com --scopes repo,workflow`. Configure Git to
+use that login for HTTPS pushes:
+
+```bash
+gh auth setup-git
+```
+
+Node.js 22 or later is only needed locally for the optional code-fix extension.
+The required labs do not need local Node.js or a package installation.
+
 ## Your Repository
 
 Use this template to create your own repository, then clone your copy.
@@ -27,8 +61,17 @@ Do not work in the shared template or open exercise issues here.
 ```bash
 gh repo create my-agentic-workflows --template shin-akuma/agentic-workflows-lab --public --clone
 cd my-agentic-workflows
-gh auth status
-gh aw version
+git config user.name
+git config user.email
+```
+
+If either Git identity value is missing, configure it for this repository,
+replacing the example values with your name and your preferred commit email
+(a GitHub-provided no-reply email is suitable for this public repository):
+
+```bash
+git config user.name "Your Name"
+git config user.email "YOUR_GITHUB_NOREPLY_EMAIL"
 ```
 
 Use `gh-aw` v0.92.0 for the workshop. For a fresh installation:
@@ -39,10 +82,22 @@ gh extension install github/gh-aw --pin v0.92.0
 
 If an older version is installed, remove it with `gh extension remove aw`, then
 run the pinned installation command above. Skip this if v0.92.0 is already installed.
-Windows users should use the documented WSL setup. All commands below run from
-your own cloned repository, using Bash in Linux, macOS, or WSL.
+Check the version after installation:
+
+```bash
+gh aw version
+```
+
+All remaining commands run from your own cloned repository. Keep its default
+branch named `main` for the provided CI commands.
 
 ## Setup
+
+The template includes **Support hours tests**, an ordinary CI workflow with one
+deliberate failing test at exactly 08:00 UTC. If this workflow runs, expect 11
+passes and one failure until the optional code fix. That red result is not a
+failure of Weekly Summary, Issue Helper, or Repo Assist. Inspect the workflow
+name before troubleshooting; do not fix or disable the starter test for Lab 1.
 
 1. Enable Issues and GitHub Actions in your repository.
 2. Under Settings > Actions > General, enable Allow GitHub Actions to create and approve pull requests.
