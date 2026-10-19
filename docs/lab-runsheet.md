@@ -67,6 +67,13 @@ Follow [Lab 1 instructions](../README.md#lab-1-your-first-workflow).
 Success: a successful run and one summary issue grounded in the seeded activity.
 The issue should contain progress, open questions, and next steps, not invented events.
 
+During the Actions inspection, point out the
+[threat-detection job](repo-assist-reference.md#threat-detection-review-before-publication)
+between agent execution and safe outputs. Check its verdict and enforcement policy;
+a warning is not necessarily a blocked write. Mention
+[staged previews](repo-assist-reference.md#staged-previews-optional-rehearsal)
+as an optional later exercise, not a required checkpoint or a zero-side-effect mode.
+
 ### Lab 1 Debrief
 
 > Which file does GitHub Actions execute? Why can a read-only agent still request
@@ -86,6 +93,13 @@ Follow [Lab 2 instructions](../README.md#lab-2-safe-outputs-and-command-triggers
 
 > Now give the agent an event to respond to and a small write budget. We will ask
 > for a comment first, then explicitly request a follow-up issue.
+
+Before the first command, explain
+[trigger authorization](repo-assist-reference.md#trigger-authorization-who-can-start-a-run):
+the default roles are `admin`, `maintainer`, and `write`. In pairs, use an authorized
+account; do not widen access to `all` to resolve a failure. When showing the prompt,
+explain that [sanitized context](repo-assist-reference.md#sanitized-context-safer-input-still-untrusted)
+reduces specific input hazards but remains untrusted text, not instructions to obey.
 
 ### Lab 2 Checkpoints
 
@@ -120,6 +134,19 @@ Follow [Lab 3 instructions](../README.md#lab-3-install-repo-assist).
 > Reuse an existing workflow, but inspect it before running it. We will remove its
 > schedule, reduce its write limits, and ask only for issue labelling.
 
+Use three minutes of the existing 0:55-1:04 walkthrough for the
+[Repo Assist technical reference](repo-assist-reference.md#three-minute-walkthrough).
+Keep the workflow open while pointing to each setting:
+
+* MCP is the tool interface; `toolsets` selects GitHub tool groups, not permissions.
+* `network.allowed` lists reachable destination bundles, not trusted content.
+* `min-integrity: none` admits untrusted GitHub submissions for triage.
+* `protected-files` flags sensitive changes on PR creation here, but follow-up
+  pushes use `allowed`; `exclude` removes protection rather than preventing edits.
+
+> What can it read, which tools can it use, where can it connect, and which changes
+> need extra protection? The Task 1-only prompt does not remove configured PR outputs.
+
 ### Lab 3 Checkpoints
 
 | Time | Participant action | Facilitator check |
@@ -128,6 +155,12 @@ Follow [Lab 3 instructions](../README.md#lab-3-install-repo-assist).
 | 1:01-1:04 | Review, compile, commit, and push | Explain the memory-validator review before any `--approve` use |
 | 1:04-1:08 | Post the Task 1-only command from the guide | Check the selected task and issue-label results |
 | 1:08-1:10 | Inspect labels and discuss the broader workflow | Do not expect a Monthly Activity report in command mode |
+
+Before any validator approval, explain
+[repo memory and validator trust](repo-assist-reference.md#repo-memory-persistent-data-and-trusted-validators):
+memory survives runs on a branch and is public in this public repository. Store no
+secrets there. The validator is trusted executable code, not a sandbox; inspect it
+before approving it, and distinguish valid JSON from trustworthy content.
 
 The pinned upstream install may report the documented `web-fetch` compilation
 error after downloading the source. Apply the guide's edits, then recompile.
@@ -169,6 +202,18 @@ unneeded workshop tokens. Never ask participants to display credentials.
 
 Ask for the lab number, workflow name, run URL, and failing job or step. Use the
 [recovery table](../README.md#recovery) before changing permissions or retrying.
+
+Use the [diagnostic reference](repo-assist-reference.md#diagnostics-inspect-the-failing-boundary)
+from the participant's repository:
+
+```bash
+gh aw mcp inspect repo-assist
+gh aw audit RUN_ID
+```
+
+Substitute the affected workflow name and replace `RUN_ID` with the run ID or URL.
+Check activation, MCP tools, firewall denials, detection, and safe-output results.
+Review downloaded logs and reports for sensitive content before sharing them.
 
 Do not spend the whole group's time on one environment. Pair the participant,
 show a clearly identified rehearsal result, or return to the failure after the lab.

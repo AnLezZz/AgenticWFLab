@@ -174,6 +174,11 @@ Then post `/issue-helper create-follow-up` and inspect the new follow-up issue.
 The command must be first in a new comment, and the lock file must be on the
 default branch before you post it.
 
+By default, only actors with repository roles `admin`, `maintainer`, or `write`
+can activate the workflow. In a pair, use the owner's account or grant the partner
+an appropriate role. This is separate from which authors' content the agent can
+read. Do not set `on.roles: all` to work around a failed command.
+
 Success: one substantive comment per run, and at most one follow-up issue when
 requested. Framework status comments are separate from the agent's comment cap.
 
@@ -208,6 +213,10 @@ send it to an external service. The workshop copy retains the upstream memory
 branch. The compiler may ask you to approve this validator; inspect it before
 using `gh aw compile repo-assist --approve`.
 
+Memory persists on `memory/repo-assist-memory` across runs and is public in your
+public repository. Never store secrets or confidential data there. The validator
+is trusted executable code, not a sandbox; inspect it before approving it.
+
 ```bash
 gh aw compile repo-assist
 git add .github/workflows .gitattributes
@@ -241,10 +250,21 @@ Completed workflows and a facilitator runbook are in the
 Copy the relevant Markdown file into your own repository, recompile, and push.
 Do not copy a token or assume template secrets transfer.
 
+For MCP configuration and run diagnostics, use:
+
+```bash
+gh aw mcp inspect repo-assist
+gh aw audit RUN_ID
+```
+
+Replace `RUN_ID` with your Actions run ID or full run URL. The audit downloads
+logs and artifacts; check MCP failures, firewall denials, detection results, and
+safe-output outcomes. Review reports for sensitive content before sharing them.
+
 | Symptom | Check |
 | --- | --- |
 | Copilot authentication fails | Secret name, PAT permission, expiry, and Copilot access |
-| Command does not start | Command first in comment; workflow and lock file on default branch |
+| Command does not start | Actor has an allowed repository role; command first in comment; workflow and lock file on default branch |
 | PR creation fails | Repository Actions PR setting and organisation policy |
 | Compiler rejects frontmatter | Workshop compiler v0.92.0 and the Lab 3 adaptations |
 | Run takes too long | Inspect Actions logs; avoid launching duplicate runs |
