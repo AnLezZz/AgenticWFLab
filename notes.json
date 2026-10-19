@@ -1,7 +1,7 @@
 {
   "version": 1,
   "cursors": {
-    "labelling_after": 6,
+    "labelling_after": null,
     "investigation_after": null
   },
   "issues": [],
