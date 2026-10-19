@@ -233,15 +233,56 @@ On either seeded issue, post:
 Success: Repo Assist labels the workshop issues. Command mode skips weighted
 task selection and the Monthly Activity report. A report is not expected here.
 
-Optional extension, after labelling, on the support-hours issue:
+### Optional Code Fix
+
+After labelling, try a tested code fix. This extension is outside the required
+15-minute lab. Use Node.js 22 or later; no packages or build are needed.
+
+[isSupportOpen](src/support-hours.mjs) accepts a valid JavaScript `Date` and an
+optional `isPublicHoliday` boolean supplied by the caller. Standard support is
+open Monday to Friday, 08:00 UTC inclusive to 18:00 UTC exclusive, excluding
+holidays. The function does not discover holidays or model critical on-call support.
+
+Run the [tests](test/support-hours.test.mjs):
+
+```bash
+node --test test/support-hours.test.mjs
+```
+
+Expect 11 passes and one deliberate failure, `open exactly at 08:00 UTC`.
+The starter's CI can be red for this reason; it does not block Labs 1 or 2.
+Create a separate code issue once, rather than repurposing the handbook issue:
+
+```bash
+gh issue create --title "Support availability is false at opening time" --body "isSupportOpen(new Date('2026-10-19T08:00:00.000Z')) returns false, but standard support opens at 08:00 UTC. Run node --test test/support-hours.test.mjs to reproduce. Fix src/support-hours.mjs without weakening tests or changing the policy. All 12 existing tests must pass, preserving UTC, weekdays, holidays, and the exclusive 18:00 closing time. Open one draft PR with this issue linked and before/after test results. Do not merge."
+```
+
+On that code issue, post:
 
 ```text
-/repo-assist Fix only the support-hours mismatch in docs/support-handbook.md using docs/service-policy.md. Read AGENTS.md, validate the diff, and open one draft PR linked to this issue. Do not merge it.
+/repo-assist Fix only the opening-time bug in src/support-hours.mjs using docs/service-policy.md. Read AGENTS.md, run node --test test/support-hours.test.mjs before and after the fix, preserve existing assertions, and open one draft PR linked to this issue with the actual test results. Do not merge it.
 ```
 
 Review the exact diff. `AGENTS.md` guides behaviour; safe-output permissions and
 caps are enforced separately. Agent-created PRs using `GITHUB_TOKEN` do not
-generally trigger ordinary push/PR CI. This exercise is documentation-only.
+generally trigger ordinary push/PR CI. To verify the reviewed code and tests,
+replace `123` with the draft PR number and dispatch the included test workflow:
+
+```bash
+PR_NUMBER=123
+PR_SHA=$(gh pr view "$PR_NUMBER" --json headRefOid --jq .headRefOid)
+gh workflow run test.yml --ref main -f ref="$PR_SHA"
+gh run list --workflow test.yml --limit 5
+```
+
+The [test workflow](.github/workflows/test.yml) uses its definition on `main` and
+checks out the exact PR head SHA. It runs with read-only permissions, no supplied
+secrets, and no persisted checkout credentials. It is ordinary Actions YAML, so
+do not pass it to `gh aw compile`.
+
+Inspect the checkout SHA and all 12 passing tests in Actions. Record the run URL
+and tested SHA with your review; this is separate evidence, not an automatic
+required PR check. Rerun for any new PR head. Do not merge the exercise PR.
 
 ## Recovery
 

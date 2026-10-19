@@ -27,6 +27,12 @@ time varies; a queued or running job is not a completed checkpoint.
 | 1:10-1:20 | Coach the design exercise | Write a four-line workflow spec | Trigger, job, outputs, guardrails |
 | 1:20-1:30 | Debrief and answer questions | Share evidence and clean up | Know what to review and disable |
 
+For the opening demo, use the demo repository's
+[code-fix rehearsal](https://github.com/shin-akuma/agentic-workflows-demo#rehearsal).
+Show the deliberate 08:00 UTC test failure, the proposed code diff, and a manual
+test run for the reviewed PR commit. Keep a completed rehearsal available; do not
+wait for a new agent run and CI run to finish within the ten-minute introduction.
+
 ## Readiness Gate
 
 Complete the guide's [repository](../README.md#your-repository) and
@@ -168,6 +174,12 @@ For a different error, inspect it rather than assuming installation succeeded.
 
 Success: Repo Assist applies appropriate labels to the exercise issues. This
 command should not change files or open a PR. The draft-PR task is optional.
+
+Point interested participants to the [optional code fix](../README.md#optional-code-fix)
+after the required lab. It needs Node.js 22 or later and a separate code issue.
+The starter has 11 passing tests and one deliberate opening-time failure; the
+completed fix must pass all 12. Review the agent's evidence and manually test the
+exact PR head, since an agent-created PR may not start ordinary PR CI.
 
 ### Lab 3 Debrief
 
